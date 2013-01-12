@@ -112,6 +112,8 @@ typedef struct tskTaskControlBlock
 		portSTACK_TYPE *pxEndOfStack;			/*< Points to the end of the stack on architectures where the stack grows up from low memory. */
 	#endif
 
+    unsigned short usStackSize;
+
 	#if ( portCRITICAL_NESTING_IN_TCB == 1 )
 		unsigned portBASE_TYPE uxCriticalNesting; /*< Holds the critical section nesting depth for ports that do not maintain their own count in the port layer. */
 	#endif
@@ -372,7 +374,7 @@ portTickType xItemValue;																\
 #define prvGetTCBFromHandle( pxHandle ) ( ( ( pxHandle ) == NULL ) ? ( tskTCB * ) pxCurrentTCB : ( tskTCB * ) ( pxHandle ) )
 
 /* Callback function prototypes. --------------------------*/
-extern void vApplicationStackOverflowHook( xTaskHandle pxTask, signed char *pcTaskName );
+extern void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName );
 extern void vApplicationTickHook( void );
 
 /* File private functions. --------------------------------*/
@@ -2418,6 +2420,7 @@ tskTCB *pxNewTCB;
 		{
 			/* Just to help debugging. */
 			memset( pxNewTCB->pxStack, ( int ) tskSTACK_FILL_BYTE, ( size_t ) usStackDepth * sizeof( portSTACK_TYPE ) );
+			pxNewTCB->usStackSize = usStackDepth * sizeof( portSTACK_TYPE );
 		}
 	}
 
@@ -2751,5 +2754,181 @@ tskTCB *pxNewTCB;
 /*-----------------------------------------------------------*/
 
 
+/*---------------------------------------------------------------------------*/
+/*--------------------------------扩展函数-----------------------------------*/
+/*---------------------------------------------------------------------------*/
+/**
+ ******************************************************************************
+ * @brief      获取任务的任务名称.
+ * @param[in]  任务句柄
+ * @param[out] None
+ * @retval
+ *          char*  返回任务名称的字符串指针
+ *
+ * @details
+ *
+ * @note
+ ******************************************************************************
+ */
+char*
+vTaskGetTaskName(xTaskHandle *pxTask)
+{
+    tskTCB *pxTCB;
+
+    if (pxTask == (xTaskHandle *)pxCurrentTCB)
+    {
+        pxTask = NULL;
+    }
+
+    pxTCB = prvGetTCBFromHandle( pxTask );
+
+    return (char*) (pxTCB->pcTaskName);
+
+}
+
+/**
+ ******************************************************************************
+ * @brief      任务堆栈溢出处理函数.
+ * @param[in]  None
+ * @param[out] None
+ * @retval     None
+ *
+ * @details
+ *      本函数在异常处理任务中进行执行，主要功能：
+ *      输出错误信息；
+ *      调用应用层钩子函数；
+ *      挂起发生堆栈溢出的任务；
+ * @note
+ *      TODO:是否需要立即重启？
+ ******************************************************************************
+ */
+void
+vStackOverFlowInfoHandle(int arg1,int arg2)
+{
+    int taskId = arg1;
+    signed char *pcTaskName = (signed char *)arg2;
+    SYS_DEBUG(DBG_SEVERE, ("\n\n vStackOverFlowInfoHandle: ERROR! TASK %08x STACK OVERFLOW!\n",*((uint32_t*)arg2)));
+
+    SYS_DEBUG(DBG_SEVERE, ("\n\n vStackOverFlowInfoHandle: ERROR! TASK %x STACK OVERFLOW!\n",taskId));
+
+
+    extern VOIDFUNCPTR _func_evtLogOverStackHook;
+    if (_func_evtLogOverStackHook != NULL)
+        _func_evtLogOverStackHook(taskId,pcTaskName);
+    vTaskSuspend((xTaskHandle)taskId);
+}
+void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName )
+{
+    extern FUNCPTR     _func_excJobAdd;
+    if (_func_excJobAdd != NULL)
+    {
+        _func_excJobAdd(vStackOverFlowInfoHandle,(int)pxTask,(int)pcTaskName,0,0,0,0);
+    }
+}
+
+
+
+#if ( configUSE_TRACE_FACILITY == 1 )
+
+	static void vTaskInfoList(xList *pxList, char *cStatus )
+	{
+	volatile tskTCB *pxNextTCB, *pxFirstTCB;
+	unsigned short usStackRemaining;
+
+	    /* Write the details of all the TCB's in pxList into the buffer. */
+	    listGET_OWNER_OF_NEXT_ENTRY( pxFirstTCB, pxList );
+	    do
+	    {
+	        listGET_OWNER_OF_NEXT_ENTRY( pxNextTCB, pxList );
+	        #if ( portSTACK_GROWTH > 0 )
+	        {
+	            usStackRemaining = usTaskCheckFreeStackSpace( ( unsigned char * ) pxNextTCB->pxEndOfStack );
+	        }
+	        #else
+	        {
+	            usStackRemaining = usTaskCheckFreeStackSpace( ( unsigned char * ) pxNextTCB->pxStack );
+	        }
+	        #endif
+
+	        unsigned short usStackUsed = pxNextTCB->usStackSize - usStackRemaining*sizeof( portSTACK_TYPE );
+	        uint8_t str[20];
+	        memset(str, 0, sizeof(str));
+	        sprintf((char_t *)str, "%d/%d(%3d%%)", usStackUsed,pxNextTCB->usStackSize,usStackUsed*100/pxNextTCB->usStackSize);
+
+	        printf("%-16s %3u %-10s %8X %20s %8X\r\n", pxNextTCB->pcTaskName,
+	        (unsigned int)(configMAX_PRIORITIES-1 - pxNextTCB->uxPriority),cStatus,(unsigned int) pxNextTCB->pxTopOfStack,
+	        str,(unsigned int) pxNextTCB);
+
+
+	    } while( pxNextTCB != pxFirstTCB );
+	}
+
+	/**
+	 *******************************************************************************
+	 * @brief      显示当前任务信息.
+	 * @param[in]  None
+	 * @param[out] None
+	 * @retval     None
+	 *
+	 * @details
+	 *
+	 * @note
+	 *******************************************************************************
+	 */
+	uint32_t vTaskInfo ()
+	{
+	    // 输出列名
+	    printf("%-16s %3s %-10s %8s %20s %10s\n\r", "NAME", "PRI", "STATUS", "SP", "USED/SIZE", "TCBID");
+	    printf("---------------- --- ---------- -------- -------------------- ----------\n\r");
+
+	   // vTaskSuspendAll();
+
+	    unsigned portBASE_TYPE uxQueue;
+	    uxQueue = uxTopUsedPriority + 1;
+
+	    do
+	    {
+	        uxQueue--;
+
+	        if( !listLIST_IS_EMPTY( &( pxReadyTasksLists[ uxQueue ] ) ) )
+	        {
+	            vTaskInfoList( ( xList * ) &( pxReadyTasksLists[ uxQueue ] ), "READY" );
+	        }
+	    }while( uxQueue > ( unsigned short ) tskIDLE_PRIORITY );
+
+
+	    if( !listLIST_IS_EMPTY( pxDelayedTaskList ) )
+	    {
+	        vTaskInfoList( ( xList * ) pxDelayedTaskList, "BLOCK" );
+	    }
+
+	    if( !listLIST_IS_EMPTY( pxOverflowDelayedTaskList ) )
+	    {
+	        vTaskInfoList( ( xList * ) pxOverflowDelayedTaskList, "BLOCK" );
+	    }
+
+	    #if( INCLUDE_vTaskDelete == 1 )
+	    {
+	        if( !listLIST_IS_EMPTY( &xTasksWaitingTermination ) )
+	        {
+	            vTaskInfoList( ( xList * ) &xTasksWaitingTermination, "DELETE" );
+	        }
+	    }
+	    #endif
+
+	    #if ( INCLUDE_vTaskSuspend == 1 )
+	    {
+	        if( !listLIST_IS_EMPTY( &xSuspendedTaskList ) )
+	        {
+	            vTaskInfoList( ( xList * ) &xSuspendedTaskList, "SUSPEND");
+	        }
+	    }
+	    #endif
+
+	    //xTaskResumeAll();
+        return 1;
+	}
+
+#endif
 
 
