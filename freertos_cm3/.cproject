@@ -53,17 +53,20 @@
 								<option id="org.eclipse.cdt.cross.arm.gnu.c.link.option.paths.1068179324" name="Library search path (-L)" superClass="org.eclipse.cdt.cross.arm.gnu.c.link.option.paths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/bsp/cpu/stm32f103}&quot;"/>
 								</option>
-								<option id="org.eclipse.cdt.cross.arm.gnu.c.link.option.libs.626150298" superClass="org.eclipse.cdt.cross.arm.gnu.c.link.option.libs" valueType="libs">
+								<option id="org.eclipse.cdt.cross.arm.gnu.c.link.option.libs.626150298" name="Libraries (-l)" superClass="org.eclipse.cdt.cross.arm.gnu.c.link.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" value="stm32f1lib"/>
 								</option>
 								<inputType id="org.eclipse.cdt.cross.arm.gnu.c.linker.input.1248950916" superClass="org.eclipse.cdt.cross.arm.gnu.c.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
 								</inputType>
+								<outputType id="org.eclipse.cdt.cross.arm.gnu.c.linker.output.142927967" outputPrefix="" superClass="org.eclipse.cdt.cross.arm.gnu.c.linker.output"/>
 							</tool>
 							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.cpp.linker.debug.331764763" name="ARM Sourcery Windows GCC C++ Linker" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.cpp.linker.debug"/>
 							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.archiver.base.1863578018" name="ARM Sourcery Windows GCC Archiver" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.archiver.base"/>
-							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.createflash.debug.716482761" name="ARM Sourcery Windows GNU Create Flash Image" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.createflash.debug"/>
+							<tool commandLinePattern="arm-none-eabi-objcopy -O binary freertos_cm3.elf  &quot;freertos_cm3.bin&quot;" id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.createflash.debug.716482761" name="ARM Sourcery Windows GNU Create Flash Image" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.createflash.debug">
+								<option id="org.eclipse.cdt.cross.arm.gnu.createflash.out.choice.982831809" name="Output file format (-O)" superClass="org.eclipse.cdt.cross.arm.gnu.createflash.out.choice" value="org.eclipse.cdt.cross.arm.gnu.createflash.out.choice.binary" valueType="enumerated"/>
+							</tool>
 							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.createlisting.debug.2129138097" name="ARM Sourcery Windows GNU Create Listing" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.createlisting.debug"/>
 							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.printsize.debug.134603326" name="ARM Sourcery Windows GNU Print Size" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.printsize.debug"/>
 						</toolChain>
