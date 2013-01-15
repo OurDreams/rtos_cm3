@@ -12,7 +12,7 @@
  */
 #include <maths.h>
 #include <intLib.h>
-#include "../cpu/stm32f103/inc/stm32f1lib.h"
+#include "../../cpu/stm32f103/inc/stm32f1lib.h"
 
 #if 0
 /*UART口的定义*/
