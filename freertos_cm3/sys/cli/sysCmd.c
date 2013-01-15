@@ -3,7 +3,7 @@
  * @file      sysCmd.c
  * @brief     系统命令行接口实现
  *
- * @copyright      Copyright(C), 2008-2012,Sanxing Electric Co.,Ltd.
+ ******************************************************************************
  */
  
 /*-----------------------------------------------------------------------------
@@ -11,7 +11,6 @@ Section: Includes
 -----------------------------------------------------------------------------*/
 #include <types.h>
 #include <shell.h>
-//#include <sxLib.h>
 
 /*-----------------------------------------------------------------------------
 Section: Type Definitions
@@ -81,7 +80,7 @@ SHELL_CMD(
 #if 0
 uint32_t do_version(cmd_tbl_t * cmdtp, uint32_t argc, uint8_t *argv[])
 {
-    printf("SXOS version %s.\n",osVersion());
+    printf("OS version %s.\n",osVersion());
     printf("Kernel: FreeRTOS V6.1.0\n");
     printf("Build on %s.\n",osBuildTime());
     return 1;
