@@ -36,7 +36,7 @@ Section: Global Variables
  *******************************************************************************
  */
 extern void
-reboot(void) __attribute__ (( weak ));
+bsp_reboot(void) __attribute__ (( weak ));
 
 /*-----------------------------------------------------------------------------
 Section: Local Variables
@@ -66,12 +66,10 @@ SHELL_CMD(
     "i \r\t\t\t\t Summary of tasks' TCBs\r\n"
 );
 
-#if 0
 /*SHELL CMD FOR NET*/
-uint32_t do_reboot(cmd_tbl_t * cmdtp, uint32_t argc, uint8_t *argv[])
+uint32_t do_reboot(cmd_tbl_t * cmdtp, uint32_t argc, const uint8_t *argv[])
 {
-    //sysReboot();
-    reboot();
+    bsp_reboot();
     return 1;
 }
 
@@ -80,6 +78,7 @@ SHELL_CMD(
     "reboot \r\t\t\t\t Reboot \n"
 );
 
+#if 0
 uint32_t do_version(cmd_tbl_t * cmdtp, uint32_t argc, uint8_t *argv[])
 {
     printf("SXOS version %s.\n",osVersion());
