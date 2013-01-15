@@ -57,12 +57,12 @@
  ******************************************************************************
  * @brief      spawn a task.
  * @param[in]  name             £ºname of new task
- * @param[in]   priority            : priority of new task
- * @param[in]  stackSize          : size (bytes) of stack, need a multiple of 4
- * @param[in]  entryPt             : entry point of new task
- * @param[in]   arg                : task args to pass to func
+ * @param[in]   priority        : priority of new task
+ * @param[in]  stackSize        : size (bytes) of stack, need a multiple of 4
+ * @param[in]  entryPt          : entry point of new task
+ * @param[in]   arg             : task args to pass to func
  * @retval
- *          TASK_ID                   : task handler(task tcb pointer)
+ *          TASK_ID             : task handler(task tcb pointer)
  *
  * @details
  *

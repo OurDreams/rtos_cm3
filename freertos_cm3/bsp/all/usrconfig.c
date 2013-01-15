@@ -33,10 +33,12 @@ static void
 rootTask(void *p_arg)
 {
     //printf version
-    //shell_init();
-
     printf("....STM32F103 APP START...\n");
     printf(the_rtos_logo);
+
+    shell_init();
+
+    taskDelete(NULL);
 }
 
 /*
@@ -74,7 +76,6 @@ int32_t main(void)
     /* Start scheduler */
     vTaskStartScheduler();
 
-    printf("%s\n", __FUNCTION__);
     /* We should never get here as control is now taken by the scheduler */
     for( ;; );
 

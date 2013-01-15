@@ -11,7 +11,7 @@
 #include <shell.h>
 #include <stdio.h>
 #include <string.h>
-#include <sched.h>
+#include <taskLib.h>
 //#include <ttylib.h>
 
 /*-----------------------------------------------------------------------------
@@ -34,7 +34,7 @@ static uint8_t console_buffer[CFG_CBSIZE]; /* console I/O buffer   */
 static const char_t erase_seq[] = "\b \b";
 static const char_t *prompt = "->";
 static cmd_tbl_t *pmatch_cmd = NULL;
-
+static TASK_ID shellTaskId = 0;
 /*-----------------------------------------------------------------------------
  Section: static Function Prototypes
  ----------------------------------------------------------------------------*/
@@ -180,7 +180,7 @@ readline(void)
     {
         taskDelay(1);
         // ºÏ≤‚ ‰»Î
-        //if ((c = bsp_getchar()) == 0)
+        if ((c = bsp_getchar()) == 0)
         //if (ttyRead(consoleFd, &c, 1) == 0) todo
         {
             continue;
@@ -501,15 +501,15 @@ shell_loop(void)
  * @note
  ******************************************************************************
  */
-void
+status_t
 shell_init(void)
 {
-#if 0
-#include <sched.h>
-#include <rtos_config.h>
-    static uint32_t shellstack[SYS_TASK_STACK_SIZE/4];
+    if (shellTaskId != 0)
+        return (ERROR); /* already called */
 
-    taskSpawn("SHELL", SYS_SHELL_PRI, shellstack,
-            SYS_TASK_STACK_SIZE, (OSFUNCPTR)shell_loop, 0);
-#endif
+    shellTaskId = taskSpawn((const signed char * const )"Shell", 2,
+            2048,(OSFUNCPTR)shell_loop, 0);
+
+    //SYS_ASSERT(shellTaskId == NULL);
+    return (OK);
 }
