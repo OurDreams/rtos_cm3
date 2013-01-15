@@ -4,7 +4,6 @@
  * @version    V0.0.1
  * @brief      shellÄ£¿é.
  * @details    This file including all API functions's implement of shell.
- * @copy       Copyrigth(C)
  *
  ******************************************************************************
  */

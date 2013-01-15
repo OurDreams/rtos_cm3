@@ -25,9 +25,9 @@ Section: Macro Definitions
 /**
  *  定义处理器的最大中断数量
  */
-#define MAX_INT_COUNT 103
+#define MAX_INT_COUNT 59
 
-#if MAX_INT_COUNT > 103
+#if MAX_INT_COUNT > 59
 #error "超出最大中断数"
 #endif
 

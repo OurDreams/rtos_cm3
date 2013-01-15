@@ -54,7 +54,7 @@
 * @{
 */
 /**
- *******************************************************************************
+ ******************************************************************************
  * @brief      spawn a task.
  * @param[in]  name             ：name of new task
  * @param[in]   priority            : priority of new task
@@ -67,7 +67,7 @@
  * @details
  *
  * @note
- *******************************************************************************
+ ******************************************************************************
  */
 extern TASK_ID
 taskSpawn(const signed char * const name, uint32_t priority, uint32_t stackSize,
@@ -78,9 +78,7 @@ taskSpawn(const signed char * const name, uint32_t priority, uint32_t stackSize,
     uint32_t param = arg;
     /* configMAX_PRIORITIES是优先级数组下标，当优先级等于它时，OS内部也会减1 */
     uint32_t prior = (priority >= MAX_TASK_PRIORITIES)?0:(MAX_TASK_PRIORITIES - priority-1);
-    int32_t result =
-            xTaskCreate( (pdTASK_CODE)entryPt, name, usStackDepth,(void *)&param,
-                    prior, &createdTask);
+    int32_t result = xTaskCreate( (pdTASK_CODE)entryPt, name, usStackDepth,(void *)&param, prior, &createdTask);
 
      if (result == pdPASS)
     {
@@ -93,7 +91,7 @@ taskSpawn(const signed char * const name, uint32_t priority, uint32_t stackSize,
 }
 
 /**
- *******************************************************************************
+ ******************************************************************************
  * @brief      delete a task.
  * @param[in]
  *              tid : task ID of task to delete
@@ -101,7 +99,7 @@ taskSpawn(const signed char * const name, uint32_t priority, uint32_t stackSize,
  * @details
  *
  * @note
- *******************************************************************************
+ ******************************************************************************
  */
 extern void
 taskDelete(TASK_ID tid)
@@ -110,14 +108,14 @@ taskDelete(TASK_ID tid)
 }
 
 /**
- *******************************************************************************
+ ******************************************************************************
  * @brief      suspend a task.
  * @param[in]   tid : task ID of task to suspend
  *
  * @details
  *
  * @note
- *******************************************************************************
+ ******************************************************************************
  */
 extern void
 taskSuspend(TASK_ID tid)
@@ -126,14 +124,14 @@ taskSuspend(TASK_ID tid)
 }
 
 /**
- *******************************************************************************
+ ******************************************************************************
  * @brief      resume a previously suspended task.
  * @param[in]   tid : task ID of task to resume
  *
  * @details
  *
  * @note
- *******************************************************************************
+ ******************************************************************************
  */
 extern void
 taskResume(TASK_ID tid)
@@ -142,13 +140,13 @@ taskResume(TASK_ID tid)
 }
 
 /**
- *******************************************************************************
+ ******************************************************************************
  * @brief      This function is used to prevent rescheduling to take place.
  *
  * @details
  *
  * @note
- *******************************************************************************
+ ******************************************************************************
  */
 extern void
 taskLock(void)
@@ -157,13 +155,13 @@ taskLock(void)
 }
 
 /**
- *******************************************************************************
+ ******************************************************************************
  * @brief      This function is used to re-allow rescheduling.
  *
  * @details
  *
  * @note
- *******************************************************************************
+ ******************************************************************************
  */
 extern void
 taskUnlock(void)
@@ -172,7 +170,7 @@ taskUnlock(void)
 }
 
 /**
- *******************************************************************************
+ ******************************************************************************
  * @brief      delay the current task.
  * @param[in]   ticks : number of ticks to delay task
  *
@@ -180,7 +178,7 @@ taskUnlock(void)
  *  task until the specified number of system ticks expires
  *
  * @note
- *******************************************************************************
+ ******************************************************************************
  */
 extern void
 taskDelay(uint32_t ticks)
@@ -189,7 +187,7 @@ taskDelay(uint32_t ticks)
 }
 
 /**
- *******************************************************************************
+ ******************************************************************************
  * @brief      get number of clock ticks.
 
  * @retval     Return the number of clock ticks
@@ -198,7 +196,7 @@ taskDelay(uint32_t ticks)
  * value of the 32-bit counter which keeps track of the number of clock ticks
  *
  * @note
- *******************************************************************************
+ ******************************************************************************
  */
 extern uint32_t
 tickGet(void)
@@ -207,14 +205,14 @@ tickGet(void)
 }
 
 /**
- *******************************************************************************
+ ******************************************************************************
  * @brief      Get the task ID of a runing task..
  * @retval     The task ID of the calling task;
  *
  * @details
  *
  * @note
- *******************************************************************************
+ ******************************************************************************
  */
 extern TASK_ID
 taskIdSelf()
@@ -224,7 +222,7 @@ taskIdSelf()
 }
 
 /**
- *******************************************************************************
+ ******************************************************************************
  * @brief      Get the name associated with a task ID.
  * @param[in]   tid  task ID of task whose name is to be found
  * @retval    a pointer to task name.
@@ -232,7 +230,7 @@ taskIdSelf()
  * @details
  *
  * @note
- *******************************************************************************
+ ******************************************************************************
  */
 extern char *taskName(TASK_ID tid)
 {
@@ -241,12 +239,12 @@ extern char *taskName(TASK_ID tid)
 }
 
 /**
- *******************************************************************************
+ ******************************************************************************
  * @brief      get  tick numbers per second.
  * @details
  *
  * @note
- *******************************************************************************
+ ******************************************************************************
  */
 extern uint32_t
 sysClkRateGet(void)
@@ -255,13 +253,13 @@ sysClkRateGet(void)
 }
 
 /*
- ********************************************************************************
+ *******************************************************************************
  *                                SEMAPHORE INTERFACE
- ********************************************************************************
+ *******************************************************************************
  */
 
 /**
- *******************************************************************************
+ ******************************************************************************
  * @brief      this function creates a semaphore.
  * @param[in]   cnt    the initial value for the semaphore
  * @retval     Return the new semaphore ID
@@ -269,7 +267,7 @@ sysClkRateGet(void)
  * @details
  *
  * @note
- *******************************************************************************
+ ******************************************************************************
  */
 extern SEM_ID
 semBCreate(uint32_t cnt)
@@ -291,7 +289,7 @@ semBCreate(uint32_t cnt)
 }
 
 /**
- *******************************************************************************
+ ******************************************************************************
  * @brief      This function delete a mutual exclusion semaphore.
  * @param[in]   semId    semaphore ID to take
 
@@ -299,7 +297,7 @@ semBCreate(uint32_t cnt)
  * @details
  *
  * @note
- *******************************************************************************
+ ******************************************************************************
  */
 extern void
 semDelete(SEM_ID semId)
@@ -308,7 +306,7 @@ semDelete(SEM_ID semId)
 }
 
 /**
- *******************************************************************************
+ ******************************************************************************
  * @brief      This function waits for a mutual exclusion semaphore.
  * @param[in]   semId    semaphore ID to delete
  * @param[in]  timeout   timeout in ticks
@@ -317,7 +315,7 @@ semDelete(SEM_ID semId)
  * @details
  *
  * @note
- *******************************************************************************
+ ******************************************************************************
  */
 extern status_t
 semTake(SEM_ID semId, uint32_t timeout)
@@ -337,7 +335,7 @@ semTake(SEM_ID semId, uint32_t timeout)
 }
 
 /**
- *******************************************************************************
+ ******************************************************************************
  * @brief      This function signals a semaphore.
  * @param[in]   semId   Semaphore ID to give
  * @retval         OK on success, ERROR otherwise
@@ -345,7 +343,7 @@ semTake(SEM_ID semId, uint32_t timeout)
  * @details
  *
  * @note
- *******************************************************************************
+ ******************************************************************************
  */
 extern status_t
 semGive(SEM_ID semId)
@@ -361,13 +359,13 @@ semGive(SEM_ID semId)
 }
 
 /*
- ********************************************************************************
+ *******************************************************************************
  *                                MESSAGE INTERFACE
- ********************************************************************************
+ *******************************************************************************
  */
 
 /**
- *******************************************************************************
+ ******************************************************************************
  * @brief      creates a message queue.
  * @param[in]   msgQLen : the number of elements in the storage area
  * @retval     Return the queue id to create.
@@ -376,7 +374,7 @@ semGive(SEM_ID semId)
  * are available.
  *
  * @note
- *******************************************************************************
+ ******************************************************************************
  */
 extern MSG_Q_ID
 msgQCreate(uint32_t msgQLen)
@@ -385,7 +383,7 @@ msgQCreate(uint32_t msgQLen)
 }
 
 /**
- *******************************************************************************
+ ******************************************************************************
  * @brief      sends a message to a queue.
  * @param[in]     msgQId    msgQId associated with the desired queue
  * @param[in]     pmsg        A pointer to the message to send
@@ -394,7 +392,7 @@ msgQCreate(uint32_t msgQLen)
  * @details
  *
  * @note
- *******************************************************************************
+ ******************************************************************************
  */
 extern status_t
 msgQSend(MSG_Q_ID msgQId, void *pmsg)
@@ -410,7 +408,7 @@ msgQSend(MSG_Q_ID msgQId, void *pmsg)
 }
 
 /**
- *******************************************************************************
+ ******************************************************************************
  * @brief      waits for a message to be sent to a queue.
  * @param[in]   msgQId      msgQId associated with the desired queue
  * @param[in]    timeout      ticks to wait
@@ -420,7 +418,7 @@ msgQSend(MSG_Q_ID msgQId, void *pmsg)
  * @details
  *
  * @note
- *******************************************************************************
+ ******************************************************************************
  */
 extern status_t
 msgQReceive(MSG_Q_ID msgQId, uint32_t timeout, void **pmsg)
@@ -445,7 +443,7 @@ msgQReceive(MSG_Q_ID msgQId, uint32_t timeout, void **pmsg)
 }
 
 /**
- *******************************************************************************
+ ******************************************************************************
  * @brief      gets the number of messages queued to a message queue.
  * @param[in]   msgQId : msgQId associated with the desired queue
  * @retval     Return the number of message in msgQ.
@@ -453,7 +451,7 @@ msgQReceive(MSG_Q_ID msgQId, uint32_t timeout, void **pmsg)
  * @details
  *
  * @note
- *******************************************************************************
+ ******************************************************************************
  */
 extern int
 msgQNumMsgs(MSG_Q_ID msgQId)
