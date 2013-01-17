@@ -467,14 +467,6 @@ uint32_t do_help(cmd_tbl_t * cmdtp, uint32_t argc, const uint8_t *argv[])
 
 SHELL_CMD(help, CFG_MAXARGS, do_help, "Print this list\r\n");
 
-/*SHELL CMD FOR SHELL*/
-uint32_t clear(cmd_tbl_t * cmdtp, uint32_t argc, const uint8_t *argv[])
-{
-    printf("111\n");
-    return 0;
-}
-
-SHELL_CMD(cmdgy, CFG_MAXARGS, do_gy, "hell gy\r\n");
 /**
  ******************************************************************************
  * @brief      shell任务执行体
