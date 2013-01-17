@@ -76,7 +76,30 @@ SHELL_CMD(
     reboot, CFG_MAXARGS,        do_reboot,
     "reboot \r\t\t\t\t Reboot \n"
 );
+/**
+ *******************************************************************************
+ * @brief      display the information of system memory pool.
+ * @param[in]  None
+ * @param[out] None
+ * @retval     None
+ *
+ * @details
+ *      This routine is a shell command for display system memory
+ *      pool's usage information.
+ * @note
+ *******************************************************************************
+ */
+extern void showMenInfo(void);
+uint32_t do_memshow(cmd_tbl_t * cmdtp, uint32_t argc, const uint8_t *argv[])
+{
+    showMenInfo();
+    return 0;
+}
 
+SHELL_CMD(
+    memshow,   CFG_MAXARGS,        do_memshow,
+    "memshow \r\t\t\t\t Print heap memory infomation \n"
+);
 #if 0
 uint32_t do_version(cmd_tbl_t * cmdtp, uint32_t argc, uint8_t *argv[])
 {

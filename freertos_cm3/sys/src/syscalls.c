@@ -19,18 +19,6 @@ _fstat(int file, struct stat *st)
     return 0;
 }
 
-/**
- *******************************************************************************
- * @brief      .
- * @param[in]  None
- * @param[out] None
- * @retval     None
- *
- * @details
- *
- * @note
- *******************************************************************************
- */
 int
 _isatty(int file)
 {
@@ -64,7 +52,7 @@ char *heap_end = 0;
 caddr_t
 _sbrk(int incr)
 {
-
+#if 0
     extern char heap_low; /* Defined by the linker */
     extern char heap_top; /* Defined by the linker */
     char *prev_heap_end;
@@ -80,7 +68,9 @@ _sbrk(int incr)
     }
     heap_end += incr;
     return (caddr_t) prev_heap_end;
-
+#else
+    return 0;
+#endif
 }
 
 int

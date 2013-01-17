@@ -29,7 +29,7 @@ Section: Macro Definitions
 #define DBG_SERIOUS         0x02    /*  memory allocation failures, ... */
 #define DBG_SEVERE          0x03    /*   */
 
-#define DBG_MASK_LEVEL      0x03
+#define DBG_MASK_LEVEL      DBG_INFO
 
 /** flag for SYS_DEBUG to enable that debug message */
 #define SYS_DBG_ON          0x80U
@@ -46,8 +46,6 @@ Section: Macro Definitions
       }while(0)
 
 
-
-
 #ifndef SYS_ASSERT
 #define SYS_ASSERT(assertion) \
         {if (assertion) sysAssert(__FUNCTION__,__LINE__);}
@@ -60,13 +58,35 @@ Section: Macro Definitions
         }
 #endif
 
+#endif
 
+#if DBG_MASK_LEVEL == DBG_INFO
+#define DEBUG_LOG(type, message)    \
+do                                  \
+{                                   \
+    if (type)                       \
+        printf message;             \
+}                                   \
+while (0)
+#define Dprintf(x...) \
+{    \
+    (void)printf("\'%s\'L[%d] %s()->", __FILE__, __LINE__, __FUNCTION__); \
+    (void)printf(x);    \
+}
+#else
+
+#define DEBUG_LOG(type, message)
+#define Dprintf(x...)
 
 #endif
 extern int sysDebugMask;
 extern void sysAssert(const char* funcname, int line);
 extern void sysError(const char* funcname, int line);
 
+extern void
+printbuffer(char_t* format,
+            uint8_t* buffer,
+            int32_t len);
 
 #endif /* _DEBUG_H_*/
 /*--------------------------End of debug.h----------------------------*/

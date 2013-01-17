@@ -14,7 +14,7 @@ Section: Includes
 #include <stdio.h>
 #include <types.h>
 #include <taskLib.h>
-//#include <intLib.h>
+#include <intLib.h>
 #include <debug.h>
 
 /*-----------------------------------------------------------------------------
@@ -100,5 +100,28 @@ extern void sysError(const char* funcname,int line)
 
 }
 
-
+/**
+ ******************************************************************************
+ * @brief
+ * @param[in]  None
+ * @param[out] None
+ * @retval     None
+ *
+ * @details
+ *
+ * @note
+ ******************************************************************************
+ */
+extern void
+printbuffer(char_t* format,
+            uint8_t* buffer,
+            int32_t len)
+{
+    (void)printf(format);
+    for (int32_t i = 0; i < len; i++)
+    {
+        (void)printf("%02X ", *(buffer + i));
+    }
+    (void)printf("\r\n");
+}
 /*----------------------------debug.c--------------------------------*/

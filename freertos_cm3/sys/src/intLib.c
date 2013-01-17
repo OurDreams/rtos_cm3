@@ -68,7 +68,7 @@ intHandler(uint32_t irq_num)
     intCnt++;
     INT_RTN int_rtn = intRtnTbl[irq_num - 16];
 
-    if (NULL != int_rtn.parameter)
+    if (0 != int_rtn.parameter)
         int_rtn.routine(int_rtn.parameter);
     else
         int_rtn.routine();
@@ -137,7 +137,7 @@ intDisconnect(uint32_t irq_num)
         return ERROR;
 
     intRtnTbl[irq_num - 16].routine = dummy;
-    intRtnTbl[irq_num - 16].parameter = NULL;
+    intRtnTbl[irq_num - 16].parameter = 0;
 
     return OK;
 }
@@ -247,7 +247,7 @@ intLibInit(void)
     // 初始化中断表
     for (irq_num = 16; irq_num < MAX_INT_COUNT; irq_num++)
     {
-        intConnect(irq_num, dummy, NULL);
+        intConnect(irq_num, dummy, 0);
     }
 
     // 使能BusFault、memFault、usgFault 可考虑在excLib初始化时使能

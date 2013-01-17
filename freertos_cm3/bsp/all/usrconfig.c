@@ -1,13 +1,17 @@
 #include <stdio.h>
 #include <string.h>
+#include <types.h>
 #include <intLib.h>
 #include <taskLib.h>
+#include <memLib.h>
 #include <shell.h>
+
+extern char heap_low; /* Defined by the linker */
+extern char cstack_top;
 
 extern void sysHwInit0(void);
 extern void vTaskStartScheduler( void );
 /* Two magic cookies used to detect data section misalignment */
-
 #define TRAP_VALUE_1    0x12348765
 #define TRAP_VALUE_2    0x5a5ac3c3
 static volatile uint32_t   trapValue1  = TRAP_VALUE_1;
@@ -69,8 +73,14 @@ int32_t main(void)
     //IO初始化TTY初始化
     sysHwInit0();
 
+    if (OK != mem_init((unsigned long)&heap_low, (unsigned long)(&cstack_top - 0x200)))
+    {
+        printf("mem_init err!\n");
+        while(1);
+    }
+
     /*起根任务，做时钟节拍初始化*/
-    (void)taskSpawn((const signed char*)"root",1,ROOTSTACKSIZE,(OSFUNCPTR)rootTask,0);
+    (void)taskSpawn((const signed char*)"root", 1, ROOTSTACKSIZE, (OSFUNCPTR)rootTask,0);
 
 
     /* Start scheduler */

@@ -1,6 +1,17 @@
-#pragma once
+/**
+ ******************************************************************************
+ * @file       list.h
+ * @version    V0.0.1
+ * @brief      list模块.
+ * @details    提供统一的链表操作方法.
+ *
+ ******************************************************************************
+ */
+#ifndef __LIST_H__
+#define __LIST_H__
 
-struct ListNode {
+struct ListNode
+{
 	struct ListNode *pNextNode, *pPrevNode;
 };
 
@@ -53,7 +64,8 @@ static inline int ListIsEmpty(const struct ListNode *pHead)
 
 /////////////////
 
-struct list_head {
+struct list_head
+{
 	struct list_head *next, *prev;
 };
 
@@ -105,3 +117,5 @@ static inline void list_del(struct list_head *entry)
 
 #define list_for_each(pos, head) \
 	for (pos = (head)->next; pos != (head); pos = pos->next)
+
+#endif /* __LIST_H__ */
