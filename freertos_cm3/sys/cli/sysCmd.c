@@ -3,7 +3,7 @@
  * @file      sysCmd.c
  * @brief     系统命令行接口实现
  *
- * @copyright      Copyright(C), 2008-2012,Sanxing Electric Co.,Ltd.
+ ******************************************************************************
  */
  
 /*-----------------------------------------------------------------------------
@@ -11,7 +11,6 @@ Section: Includes
 -----------------------------------------------------------------------------*/
 #include <types.h>
 #include <shell.h>
-//#include <sxLib.h>
 
 /*-----------------------------------------------------------------------------
 Section: Type Definitions
@@ -36,7 +35,7 @@ Section: Global Variables
  *******************************************************************************
  */
 extern void
-reboot(void) __attribute__ (( weak ));
+bsp_reboot(void) __attribute__ (( weak ));
 
 /*-----------------------------------------------------------------------------
 Section: Local Variables
@@ -66,12 +65,10 @@ SHELL_CMD(
     "i \r\t\t\t\t Summary of tasks' TCBs\r\n"
 );
 
-#if 0
 /*SHELL CMD FOR NET*/
-uint32_t do_reboot(cmd_tbl_t * cmdtp, uint32_t argc, uint8_t *argv[])
+uint32_t do_reboot(cmd_tbl_t * cmdtp, uint32_t argc, const uint8_t *argv[])
 {
-    //sysReboot();
-    reboot();
+    bsp_reboot();
     return 1;
 }
 
@@ -79,10 +76,34 @@ SHELL_CMD(
     reboot, CFG_MAXARGS,        do_reboot,
     "reboot \r\t\t\t\t Reboot \n"
 );
+/**
+ *******************************************************************************
+ * @brief      display the information of system memory pool.
+ * @param[in]  None
+ * @param[out] None
+ * @retval     None
+ *
+ * @details
+ *      This routine is a shell command for display system memory
+ *      pool's usage information.
+ * @note
+ *******************************************************************************
+ */
+extern void showMenInfo(void);
+uint32_t do_memshow(cmd_tbl_t * cmdtp, uint32_t argc, const uint8_t *argv[])
+{
+    showMenInfo();
+    return 0;
+}
 
+SHELL_CMD(
+    memshow,   CFG_MAXARGS,        do_memshow,
+    "memshow \r\t\t\t\t Print heap memory infomation \n"
+);
+#if 0
 uint32_t do_version(cmd_tbl_t * cmdtp, uint32_t argc, uint8_t *argv[])
 {
-    printf("SXOS version %s.\n",osVersion());
+    printf("OS version %s.\n",osVersion());
     printf("Kernel: FreeRTOS V6.1.0\n");
     printf("Build on %s.\n",osBuildTime());
     return 1;

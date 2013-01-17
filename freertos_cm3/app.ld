@@ -1,4 +1,3 @@
-
 /* Entry Point */
 ENTRY(resetRoutine)
 
@@ -72,8 +71,4 @@ SECTIONS
     } > SRAM
     
 	 heap_low = .; /* for _sbrk */
-     . = . + 0x2000; /* 4kB of heap memory */
-     heap_top = .; /* for _sbrk */
-
-
 }
