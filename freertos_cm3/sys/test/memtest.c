@@ -1,11 +1,11 @@
 /**
  ******************************************************************************
  * @file      memtest.c
- * @brief     C Source file of memtest.c.
+ * @brief     动态内存管理测试程序.
  * @details   This file including all API functions's 
  *            implement of memtest.c.	
  *
- * @copy      Copyrigth(C), 2008-2012,Sanxing Electric Co.,Ltd.
+ ******************************************************************************
  */
  
 /*-----------------------------------------------------------------------------
