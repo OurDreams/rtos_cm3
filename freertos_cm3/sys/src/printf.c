@@ -8,6 +8,7 @@
  *
  ******************************************************************************
  */
+#include <stdarg.h>
 #include <types.h>
 //#include <ttylib.h>
 
@@ -139,11 +140,10 @@ static int printi(char **out, int i, int b, int sg, int width, int pad, int letb
     return pc + prints (out, s, width, pad);
 }
 
-static int print(char **out, int *varg)
+static int print(char **out, const char *format, va_list args )
 {
     register int width, pad;
     register int pc = 0;
-    register char *format = (char *)(*varg++);
     char scr[2];
 
     for (; *format != 0; ++format) {
@@ -165,47 +165,29 @@ static int print(char **out, int *varg)
                 width += *format - '0';
             }
             if( *format == 's' ) {
-                register char *s = *((char **)varg++);
+                register char *s = (char *)va_arg( args, int );
                 pc += prints (out, s?s:"(null)", width, pad);
                 continue;
             }
             if( *format == 'd' ) {
-                pc += printi (out, *varg++, 10, 1, width, pad, 'a');
-                continue;
-            }
-            if(*format == 'f') {
-#if 1   //NEWLIB浮点打印,支持stm32 lm3s测试不过可能需要IQmath库
-                char *cptr = (char *) varg++;  //lint !e740 !e826  convert to double pointer
-                if (((unsigned int) cptr & 0xF) != 0) {
-                   cptr += 4 ;
-                }
-                double dbl = *(double *) cptr ;  //lint !e740 !e826  convert to double pointer
-#else   //非NEWLIB
-                double dbl = *(double *) varg++ ;  //lint !e740 !e826  convert to double pointer
-#endif
-                pc += printi (out, (int)dbl, 10, 1, width, pad, 'a');
-                scr[0] = '.';
-                scr[1] = '\0';
-                pc += prints (out, scr, width, pad);
-                pc += printi (out, (int)((int)(dbl*1000000.0) % 1000000), 10, 1, width, pad, 'a');
-                varg++; //double需要加两次
+                pc += printi (out, va_arg( args, int ), 10, 1, width, pad, 'a');
                 continue;
             }
             if( *format == 'x' ) {
-                pc += printi (out, *varg++, 16, 0, width, pad, 'a');
+                pc += printi (out, va_arg( args, int ), 16, 0, width, pad, 'a');
                 continue;
             }
             if( *format == 'X' ) {
-                pc += printi (out, *varg++, 16, 0, width, pad, 'A');
+                pc += printi (out, va_arg( args, int ), 16, 0, width, pad, 'A');
                 continue;
             }
             if( *format == 'u' ) {
-                pc += printi (out, *varg++, 10, 0, width, pad, 'a');
+                pc += printi (out, va_arg( args, int ), 10, 0, width, pad, 'a');
                 continue;
             }
             if( *format == 'c' ) {
                 /* char are converted to int then pushed on the stack */
-                scr[0] = *varg++;
+                scr[0] = (char)va_arg( args, int );
                 scr[1] = '\0';
                 pc += prints (out, scr, width, pad);
                 continue;
@@ -218,20 +200,23 @@ static int print(char **out, int *varg)
         }
     }
     if (out) **out = '\0';
+    va_end( args );
     return pc;
 }
 
-/* assuming sizeof(void *) == sizeof(int) */
-
 int printf(const char *format, ...)
 {
-    register int *varg = (int *)(&format);
-    return print(0, varg);
+        va_list args;
+
+        va_start( args, format );
+        return print( 0, format, args );
 }
 
 int sprintf(char *out, const char *format, ...)
 {
-    register int *varg = (int *)(&format);
-    return print(&out, varg);
+        va_list args;
+
+        va_start( args, format );
+        return print( &out, format, args );
 }
 /* --------------------------------- End Of File ----------------------------*/
