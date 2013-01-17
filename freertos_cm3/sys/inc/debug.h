@@ -29,12 +29,12 @@ Section: Macro Definitions
 #define DBG_SERIOUS         0x02    /*  memory allocation failures, ... */
 #define DBG_SEVERE          0x03    /*   */
 
-#define DBG_MASK_LEVEL    0x03
+#define DBG_MASK_LEVEL      0x03
 
 /** flag for SYS_DEBUG to enable that debug message */
-#define SYS_DBG_ON            0x80U
+#define SYS_DBG_ON          0x80U
 /** flag for SYS_DEBUGF to disable that debug message */
-#define SYS_DBG_OFF           0x00U
+#define SYS_DBG_OFF         0x00U
 
 
 
@@ -64,8 +64,8 @@ Section: Macro Definitions
 
 #endif
 extern int sysDebugMask;
-extern void sysAssert(const char* funcname,int line);
-extern void sysError(const char* funcname,int line);
+extern void sysAssert(const char* funcname, int line);
+extern void sysError(const char* funcname, int line);
 
 
 #endif /* _DEBUG_H_*/
