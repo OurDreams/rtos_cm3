@@ -24,9 +24,6 @@ Section: Type Definitions
 
 #define DWORD_SIZE              (WORD_SIZE << 1)
 
-#define MemToObj(ptr, type, member) \
-    (type *)((char *)ptr - (char *)(&((type *)0)->member))
-
 #define LIST_NODE_SIZE          WORD_ALIGN_UP(sizeof(struct ListNode))
 #define LIST_NODE_ALIGN(nSize)  (((nSize) + LIST_NODE_SIZE - 1) & ~(LIST_NODE_SIZE - 1))
 #define MIN_HEAP_LEN            1024

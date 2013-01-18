@@ -18,7 +18,7 @@ static volatile uint32_t   trapValue1  = TRAP_VALUE_1;
 static volatile uint32_t   trapValue2  = TRAP_VALUE_2;
 
 const char_t const * the_rtos_logo =
-#if 0
+#if 1
         " \\|/\n"
         "--O-- The CM3 RTOS is starting...\n"
         " /|\\\n";

@@ -201,7 +201,7 @@ __attribute__((section(".isr_vector")))
     { (void *)&cstack_top},     // 栈顶指针
     { resetRoutine},            // 复位中断
     {NMIRoutine},               // NMI中断
-#if 1
+#if 0
     {dummy},                    // 硬件错误中断
     {dummy},                    // 存储器管理错误中断
     {dummy},                    // 总线错误中断
