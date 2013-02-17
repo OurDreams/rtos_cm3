@@ -25,13 +25,10 @@ Section: Type Definitions
 /*-----------------------------------------------------------------------------
 Section: Constant Definitions
 -----------------------------------------------------------------------------*/
-extern VOIDFUNCPTR _func_evtLogAssertHook;
-
 
 /*-----------------------------------------------------------------------------
 Section: Global Variables
 -----------------------------------------------------------------------------*/
-int sysDebugMask = DBG_INFO;
 
 /*-----------------------------------------------------------------------------
 Section: Local Variables
@@ -47,59 +44,28 @@ Section: Local Function Prototypes
 Section: Function Definitions
 -----------------------------------------------------------------------------*/
 
+#ifdef ASSERT_DEBUG
 /**
- *******************************************************************************
- * @brief      系统断言调试输出.
- * @param[in]  funcname : 函数名称
- * @param[in]  line          : 代码行数
+ ******************************************************************************
+ * @brief      断言信息输出
+ * @param[in]  None
+ * @param[out] None
+ * @retval     None
  *
  * @details
- *      通过SYS_ASSERT宏进行调用，在调试端口输出断言信息，并调用
- *      事件记录的钩子函数。该函数将终止原有任务的继续执行。
- *      SYS_ASSERT(expression);
+ *
  * @note
- *******************************************************************************
+ ******************************************************************************
  */
-extern void sysAssert(const char* funcname,int line)
+void
+__assert_func(const char *pfile, int line, const char *pfun, const char *pex)
 {
-    printf("SYS_ASSERT: \n");
-    printf("occurred in function:%s,line:%d \n",funcname,line);
-    printf("taskname: %s \n",taskName(NULL));
-    if (_func_evtLogAssertHook != NULL)
-    {
-        _func_evtLogAssertHook(funcname,line);
-    }
+
+    printf("(%s) assert failed at %s:%d file:%s\n", pex, pfun, line, pfile);
     intLock();
     while(1);
-
 }
-
-/**
- *******************************************************************************
- * @brief      系统错误调试输出.
- * @param[in]  funcname : 函数名称
- * @param[in]  line     : 代码行数
- *
- * @details
- *      通过SYS_ERROR宏进行调用，在调试端口输出错误信息，并调用
- *      事件记录的钩子函数。该函数不会终止原有任务的继续执行。
- *      SYS_ERROR( expression);
- * @note
- *******************************************************************************
- */
-extern void sysError(const char* funcname,int line)
-{
-    printf("SYS_ERROR: \n");
-    printf("occurred in function:%s,line:%d \n",funcname,line);
-    printf("taskname: %s \n",taskName(NULL));
-
-    if (_func_evtLogAssertHook != NULL)
-    {
-        _func_evtLogAssertHook(funcname,line);
-    }
-
-}
-
+#endif
 /**
  ******************************************************************************
  * @brief

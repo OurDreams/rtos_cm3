@@ -2807,9 +2807,9 @@ vStackOverFlowInfoHandle(int arg1,int arg2)
 {
     int taskId = arg1;
     signed char *pcTaskName = (signed char *)arg2;
-    SYS_DEBUG(DBG_SEVERE, ("\n\n vStackOverFlowInfoHandle: ERROR! TASK %08x STACK OVERFLOW!\n",*((uint32_t*)arg2)));
+    printf("\n\n vStackOverFlowInfoHandle: ERROR! TASK %08x STACK OVERFLOW!\n",*((uint32_t*)arg2));
 
-    SYS_DEBUG(DBG_SEVERE, ("\n\n vStackOverFlowInfoHandle: ERROR! TASK %x STACK OVERFLOW!\n",taskId));
+    printf("\n\n vStackOverFlowInfoHandle: ERROR! TASK %x STACK OVERFLOW!\n",taskId);
 
 
     extern VOIDFUNCPTR _func_evtLogOverStackHook;

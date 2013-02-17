@@ -39,7 +39,7 @@ rootTask(void *p_arg)
     //printf version
     printf("....STM32F103 APP START...\n");
     printf(the_rtos_logo);
-
+    excInit();
     shell_init();
 
     taskDelete(NULL);

@@ -114,7 +114,7 @@ status_t excJobAdd(VOIDFUNCPTR func, int arg1, int arg2, int arg3, int arg4,
 		msg->arg[5] = arg6;
 		return msgQSend(excMsgQId, (void *) msg);
 	}
-	SYS_DEBUG(DBG_SERIOUS,("excJobAdd: FAILURE!\n"));
+	printf("excJobAdd: FAILURE!\n");
 	return ERROR;
 
 }
@@ -141,15 +141,15 @@ status_t excInit()
         return (ERROR);
     excMsgQId = msgQCreate(MAX_EXC_MSG_SIZE);
 
-    SYS_ASSERT(excMsgQId == NULL);
+    D_ASSERT(excMsgQId != NULL);
 
     excTaskId = taskSpawn((const signed char * const ) "tExcTask",
             OS_TASK_EXC_PRIO, EXC_TASK_STACK_SIZE, (OSFUNCPTR) excTask, 0);
-    SYS_ASSERT(excTaskId == NULL);
+    D_ASSERT(excTaskId != NULL);
 
     _func_excJobAdd = excJobAdd;
 
-    SYS_DEBUG(DBG_INFO,("excInit: DONE! \n"));
+    printf("excInit: DONE! \n");
     return  (OK);
 }
 

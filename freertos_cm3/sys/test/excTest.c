@@ -12,7 +12,7 @@
 /*------------------------------------------------------------------------------ 
 Section: Includes 
 ------------------------------------------------------------------------------*/
-#ifdef INCLUDE_EXC_TEST
+#if 1 //def INCLUDE_EXC_TEST
 
 #include <types.h>
 #include <stdio.h>
@@ -141,6 +141,7 @@ void taskloop()
                 *(volatile uint32_t*) (SHCSR) |= 1<<13; //1<<12 1<<13 1<<14 手工产生异常
                 break;
             case 8 :
+                //test_timer_irq_exec();
                 break;
            default:
                 printf(".\r\n");

@@ -8,9 +8,10 @@
  *
  ******************************************************************************
  */
-#include <shell.h>
 #include <stdio.h>
 #include <string.h>
+#include <shell.h>
+#include <debug.h>
 #include <taskLib.h>
 //#include <ttylib.h>
 
@@ -510,6 +511,6 @@ shell_init(void)
     shellTaskId = taskSpawn((const signed char * const )"Shell", 2,
             2048,(OSFUNCPTR)shell_loop, 0);
 
-    //SYS_ASSERT(shellTaskId == NULL);
+    D_ASSERT(shellTaskId != NULL);
     return (OK);
 }
