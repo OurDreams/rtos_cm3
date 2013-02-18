@@ -24,6 +24,7 @@ Section: Includes
 #endif
 #define Dprintf(x...)
 
+static SEM_ID the_devlib_lock = NULL;
 static struct ListNode the_dev_list;    /* 指向设备链表 */
 static device_t* the_opend_devs[MAX_OPEN_NUM];  /* 已打开设备池 */
 
@@ -144,13 +145,14 @@ find_dev_by_name(const char_t* pname)
 status_t
 devlib_init(void)
 {
-    static bool_e is_initd = FALSE;
-
-    if (is_initd == TRUE)
+    if (the_devlib_lock != NULL)
         return OK;
-
+    if ((the_devlib_lock = semBCreate(1)) == NULL)
+    {
+        Dprintf("semBCreate err\n");
+        return ERROR;
+    }
     InitListHead(&the_dev_list);
-    is_initd = TRUE;
     Dprintf("init OK\n");
 
     return OK;
@@ -206,9 +208,9 @@ dev_create(const char_t* pname, const fileopt_t* pfileopt, int32_t serial)
         }
     }
     /* 将新设备节点加入链表 */
-    intLock();
+    semTake(the_devlib_lock, WAIT_FOREVER);
     ListAddTail(&new->list, &the_dev_list);
-    intUnlock();
+    semGive(the_devlib_lock);
 
     return OK;
 }
@@ -250,9 +252,9 @@ dev_release(const char_t* pname)
         }
     }
 
-    intLock();
+    semTake(the_devlib_lock, WAIT_FOREVER);
     ListDelNode(&pnode->list);
-    intUnlock();
+    semGive(the_devlib_lock);
     semDelete(pnode->lock);
     free(pnode);
 
@@ -263,14 +265,14 @@ dev_release(const char_t* pname)
  ******************************************************************************
  * @brief 设备打开
  * @param[in]  *pname   : 设备名
- * @param[in]   mode    : 打开模式O_RDONLY | OWRONLY | O_RDWR
+ * @param[in]   flags   : 打开模式O_RDONLY | OWRONLY | O_RDWR
  *
  * @retval  >=0   : 成功
  * @retval  - 1   : 失败
  ******************************************************************************
  */
 int32_t
-dev_open(const char_t* pname, int32_t mode)
+dev_open(const char_t* pname, int32_t flags)
 {
     int32_t fd;
     device_t* pnode;
@@ -298,7 +300,7 @@ dev_open(const char_t* pname, int32_t mode)
         return -1;
     }
 
-    pnode->mode = mode;
+    pnode->flags = flags;
     if (pnode->fileopt.open != NULL)
     {
         (void)semTake(pnode->lock, WAIT_FOREVER);
@@ -338,7 +340,7 @@ dev_read(int32_t fd, void* buf, int32_t count)
     }
     device_t* pnode = the_opend_devs[realfd];
 
-    if ((pnode->fileopt.read == NULL) || (pnode->mode & O_WRONLY))
+    if ((pnode->fileopt.read == NULL) || (pnode->flags & O_WRONLY))
     {
         return -1;
     }
@@ -373,7 +375,7 @@ dev_write(int32_t fd, const void* buf, int32_t count)
     }
     device_t* pnode = the_opend_devs[realfd];
 
-    if ((pnode->fileopt.write == NULL) || (pnode->mode & O_RDONLY))
+    if ((pnode->fileopt.write == NULL) || (pnode->flags & O_RDONLY))
     {
         return -1;
     }
@@ -474,12 +476,14 @@ show_devlib_info(void)
     device_t* pnode = NULL;
     struct ListNode *iter;
 
+    semTake(the_devlib_lock, WAIT_FOREVER);
     LIST_FOR_EACH(iter, &the_dev_list)
     {
         /* 取得遍历到的对象 */
         pnode = MemToObj(iter, struct device, list);
         printf("       %s\r\t\t      %d\n", pnode->name, pnode->usrs);
     }
+    semGive(the_devlib_lock);
     //printf("  --- --- --- ---\r\t\t--- --- --- ---\n");
 }
 /*------------------------------- devlib.c ----------------------------------*/

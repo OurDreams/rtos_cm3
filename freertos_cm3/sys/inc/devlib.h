@@ -53,9 +53,10 @@ typedef struct device
     char_t name[MAX_DEVICE_NAME];   /**< 设备名 */
     SEM_ID lock;                    /**< 设备操作锁 */
     int32_t serial;                 /**< 设备的序列号 */
-    int32_t mode;                   /**< 设备打开模式 */
+    int32_t flags;                  /**< 设备打开模式 */
     int32_t offset;                 /**< 读写偏移地址 */
     int32_t usrs;                   /**< 设备打开次数 */
+    void* param;                    /**< 设备扩展参数,例如ring buf */
 } device_t;
 
 extern status_t devlib_init(void);
@@ -66,5 +67,6 @@ extern int32_t dev_read(int32_t fd, void* buf, int32_t count);
 extern int32_t dev_write(int32_t fd, const void* buf, int32_t count);
 extern int32_t dev_ioctl(int32_t fd, uint32_t cmd, void *args);
 extern int32_t dev_close(int32_t fd);
+extern void show_devlib_info(void);
 
 #endif /* __DEVLIB_H__ */
