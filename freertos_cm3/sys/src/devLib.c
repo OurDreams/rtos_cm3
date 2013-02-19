@@ -16,7 +16,7 @@ Section: Includes
 #include <string.h>
 #include <debug.h>
 #include <intLib.h>
-#include <devlib.h>
+#include <devLib.h>
 
 
 #ifdef Dprintf
